@@ -1,5 +1,5 @@
 {
-  "name": "TaskBoard",
+  "name": "taskboard",
   "private": true,
   "scripts": {
     "build": "turbo run build",
