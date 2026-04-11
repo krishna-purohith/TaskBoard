@@ -1,0 +1,10 @@
+meta {
+  name: Remove Member
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/boards/{{boardId}}/members/{{userId}}
+  auth: none
+}

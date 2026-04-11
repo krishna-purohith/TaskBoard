@@ -5,7 +5,10 @@ import { createCardSchema, updateCardSchema } from "../types/requestSchemas";
 export const cardsController = {
   async getCardById(req: Request, res: Response) {
     try {
-      const card = await cardService.getCardById(req.user!.id, req.params.id);
+      const card = await cardService.getCardById(
+        req.user!.id,
+        req.params.id as string
+      );
       res.status(200).json({ card });
     } catch (error) {
       if (error instanceof Error) {
@@ -43,7 +46,7 @@ export const cardsController = {
       }
       const card = await cardService.updateCard(
         req.user!.id,
-        req.params.id,
+        req.params.id as string,
         parsed.data
       );
       res.status(200).json({ card });
@@ -58,7 +61,7 @@ export const cardsController = {
 
   async deleteCard(req: Request, res: Response) {
     try {
-      await cardService.deleteCard(req.user!.id, req.params.id);
+      await cardService.deleteCard(req.user!.id, req.params.id as string);
       res.status(200).json({ message: "Card deleted" });
     } catch (error) {
       if (error instanceof Error) {

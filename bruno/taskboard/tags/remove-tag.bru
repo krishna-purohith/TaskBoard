@@ -1,0 +1,10 @@
+meta {
+  name: Remove Tag from Card
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/cards/{{cardId}}/tags/{{tagId}}
+  auth: none
+}

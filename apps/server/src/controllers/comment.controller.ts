@@ -12,7 +12,7 @@ export const commentsController = {
       }
       const comment = await commentService.addComment(
         req.user!.id,
-        req.params.cardId,
+        req.params.cardId as string,
         parsed.data.content
       );
       res.status(201).json({ comment });
@@ -27,7 +27,10 @@ export const commentsController = {
 
   async deleteComment(req: Request, res: Response) {
     try {
-      await commentService.deleteComment(req.user!.id, req.params.commentId);
+      await commentService.deleteComment(
+        req.user!.id,
+        req.params.commentId as string
+      );
       res.status(200).json({ message: "Comment deleted" });
     } catch (error) {
       if (error instanceof Error) {

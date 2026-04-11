@@ -1,0 +1,17 @@
+meta {
+  name: Update Column
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/columns/{{columnId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "In Progress"
+  }
+}

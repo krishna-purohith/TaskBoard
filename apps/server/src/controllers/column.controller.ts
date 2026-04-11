@@ -35,7 +35,7 @@ export const columnController = {
       }
       const column = await columnService.updateColumn(
         req.user!.id,
-        req.params.id,
+        req.params.id as string,
         parsed.data.title
       );
       res.status(200).json({ column });
@@ -49,7 +49,7 @@ export const columnController = {
   },
   async deleteColumn(req: Request, res: Response) {
     try {
-      await columnService.deleteColumn(req.user!.id, req.params.id);
+      await columnService.deleteColumn(req.user!.id, req.params.id as string);
       res.status(200).json({ message: "Column deleted" });
     } catch (error) {
       if (error instanceof Error) {

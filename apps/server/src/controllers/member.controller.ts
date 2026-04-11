@@ -12,7 +12,7 @@ export const memberController = {
       }
       const member = await memberService.addMember(
         req.user!.id,
-        req.params.boardId,
+        req.params.boardId as string,
         parsed.data.email,
         parsed.data.role
       );
@@ -30,8 +30,8 @@ export const memberController = {
     try {
       await memberService.removeMember(
         req.user!.id,
-        req.params.boardId,
-        req.params.userId
+        req.params.boardId as string,
+        req.params.userId as string
       );
       res.status(200).json({ message: "Member removed" });
     } catch (error) {

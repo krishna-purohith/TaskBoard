@@ -1,0 +1,18 @@
+meta {
+  name: Add Member
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/boards/{{boardId}}/members
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "john@gmail.com",
+    "role": "MEMBER"
+  }
+}

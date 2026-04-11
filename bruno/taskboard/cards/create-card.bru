@@ -1,0 +1,21 @@
+meta {
+  name: Create Card
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/cards
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Fix login bug",
+    "columnId": "{{columnId}}",
+    "description": "The login page has a bug",
+    "priority": "HIGH",
+    "dueDate": "2026-05-01T00:00:00.000Z"
+  }
+}

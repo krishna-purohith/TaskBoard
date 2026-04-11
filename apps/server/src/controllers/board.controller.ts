@@ -23,7 +23,7 @@ export const boardController = {
   async getBoardById(req: Request, res: Response) {
     try {
       const userId = req.user!.id;
-      const boardId = req.params.id;
+      const boardId = req.params.id as string;
       const board = await boardService.getBoardById(boardId, userId);
       res.status(200).json({
         board,
@@ -68,7 +68,7 @@ export const boardController = {
         return;
       }
       const board = await boardService.updateBoard(
-        req.params.id,
+        req.params.id as string,
         req.user!.id,
         parsed.data
       );
@@ -91,7 +91,7 @@ export const boardController = {
       if (!boardId) {
         res.status(400).json({ error: "baordid is required" });
       }
-      await boardService.deleteBoard(userId, boardId);
+      await boardService.deleteBoard(userId, boardId as string);
     } catch (error) {
       if (error instanceof Error) {
         res.status(400).json({ error: error.message });

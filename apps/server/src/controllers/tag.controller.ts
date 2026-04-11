@@ -41,8 +41,8 @@ export const tagsController = {
     try {
       const card = await tagService.assignTag(
         req.user!.id,
-        req.params.cardId,
-        req.params.tagId
+        req.params.cardId as string,
+        req.params.tagId as string
       );
       res.status(200).json({ card });
     } catch (error) {
@@ -58,8 +58,8 @@ export const tagsController = {
     try {
       const card = await tagService.removeTag(
         req.user!.id,
-        req.params.cardId,
-        req.params.tagId
+        req.params.cardId as string,
+        req.params.tagId as string
       );
       res.status(200).json({ card });
     } catch (error) {

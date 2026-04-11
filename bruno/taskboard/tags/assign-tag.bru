@@ -1,0 +1,10 @@
+meta {
+  name: Assign Tag to Card
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/cards/{{cardId}}/tags/{{tagId}}
+  auth: none
+}

@@ -1,0 +1,18 @@
+meta {
+  name: Update Board
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/boards/{{boardId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Updated Board Title",
+    "description": "Updated description"
+  }
+}
