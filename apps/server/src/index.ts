@@ -10,6 +10,10 @@ import tagRouter from "./routes/tags";
 import commentRouter from "./routes/comments";
 import cors from "cors";
 import { errorMiddleware } from "./middleware/errorMiddleware";
+import http from "http";
+import { WebSocketServer } from "ws";
+import { setupWsServer } from "./ws/wsServer";
+
 const PORT = process.env.PORT || 8080;
 
 const app = express();
@@ -26,6 +30,12 @@ app.use("/tags", tagRouter);
 
 app.use(errorMiddleware);
 
-app.listen(PORT, () =>
+const server = http.createServer(app);
+
+const wss = new WebSocketServer({ server: server, path: "/ws" });
+
+setupWsServer(wss);
+
+server.listen(PORT, () =>
   console.log(`backend-server started running on ${PORT}`)
 );

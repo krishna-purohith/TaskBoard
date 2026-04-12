@@ -82,7 +82,7 @@ export const boardController = {
 
       const boardId = req.params.id as string;
       await boardService.deleteBoard(userId, boardId);
-      res.status(204).json({ success: true });
+      res.status(200).json({ success: true, data: null, error: null });
     } catch (error) {
       next(error);
     }

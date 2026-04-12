@@ -32,7 +32,7 @@ export const commentsController = {
         req.user!.id,
         req.params.commentId as string
       );
-      res.status(204).json({ success: true });
+      res.status(200).json({ success: true, data: null, error: null });
     } catch (error) {
       next(error);
     }

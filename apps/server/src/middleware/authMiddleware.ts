@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { jwtConfig } from "../config/jwt";
 
-interface JWTPayload {
+export interface JWTPayload {
   id: string;
   name: string;
   email: string;

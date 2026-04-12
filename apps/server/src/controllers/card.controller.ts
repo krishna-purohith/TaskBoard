@@ -59,7 +59,7 @@ export const cardsController = {
   async deleteCard(req: Request, res: Response, next: NextFunction) {
     try {
       await cardService.deleteCard(req.user!.id, req.params.id as string);
-      res.status(204).json({ success: true });
+      res.status(200).json({ success: true, data: null, error: null });
     } catch (error) {
       next(error);
     }

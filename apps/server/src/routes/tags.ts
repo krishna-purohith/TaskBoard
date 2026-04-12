@@ -8,7 +8,5 @@ router.use(authMiddleware);
 
 router.get("/", tagsController.getAllTags);
 router.post("/", tagsController.createTag);
-router.post("/:cardId/tags/:tagId", tagsController.assignTag);
-router.delete("/:cardId/tags/:tagId", tagsController.removeTag);
 
 export default router;

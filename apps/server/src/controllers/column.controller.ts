@@ -5,6 +5,7 @@ import {
 } from "../types/requestSchemas";
 import { columnService } from "../services/column.service";
 import { zodCustomErroFormat } from "../types/zodErrorFormat";
+import { broadcastToBoard } from "../ws/wsServer";
 export const columnController = {
   async createColumn(req: Request, res: Response, next: NextFunction) {
     try {
@@ -22,6 +23,7 @@ export const columnController = {
         parsed.data.boardId,
         parsed.data.title
       );
+      broadcastToBoard(column.boardId, { type: "COLUMN_CREATED", column });
       res.status(201).json({ data: column, success: true, error: null });
     } catch (error) {
       next(error);
@@ -43,6 +45,7 @@ export const columnController = {
         req.params.id as string,
         parsed.data.title
       );
+      broadcastToBoard(column.boardId, { type: "COLUMN_UPDATED", column });
       res.status(200).json({ data: column, success: true, error: null });
     } catch (error) {
       next(error);
@@ -50,8 +53,15 @@ export const columnController = {
   },
   async deleteColumn(req: Request, res: Response, next: NextFunction) {
     try {
-      await columnService.deleteColumn(req.user!.id, req.params.id as string);
-      res.status(204).json({ success: true });
+      const column = await columnService.deleteColumn(
+        req.user!.id,
+        req.params.id as string
+      );
+      broadcastToBoard(column.boardId, {
+        type: "COLUMN_DELTED",
+        columnId: column.id,
+      });
+      res.status(200).json({ success: true, data: null, error: null });
     } catch (error) {
       next(error);
     }
