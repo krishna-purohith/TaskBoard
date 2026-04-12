@@ -5,15 +5,15 @@ export const signupSchema = z.object({
   password: z.string(),
 });
 export const loginSchema = z.object({
-  email: z.email(),
-  password: z.string(),
+  email: z.email().min(1, "Email is required"),
+  password: z.string().min(1, "Password is required"),
 });
 export const createBoardSchema = z.object({
-  title: z.string(),
+  title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
 });
 export const updateBoardSchema = z.object({
-  title: z.string().optional(),
+  title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
 });
 export const createColumnSchema = z.object({

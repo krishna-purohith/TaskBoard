@@ -4,6 +4,8 @@ import { authMiddleware } from "../middleware/authMiddleware";
 const router: Router = Router();
 router.use(authMiddleware);
 
-router.get("/", columnController.createColumn);
+router.post("/", columnController.createColumn);
 router.put("/:id", columnController.updateColumn);
 router.delete("/:id", columnController.deleteColumn);
+
+export default router;

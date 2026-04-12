@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { cardService } from "../services/card.service";
 import { createCardSchema, updateCardSchema } from "../types/requestSchemas";
+import { zodCustomErroFormat } from "../types/zodErrorFormat";
 
 export const cardsController = {
   async getCardById(req: Request, res: Response) {
@@ -23,7 +24,7 @@ export const cardsController = {
     try {
       const parsed = createCardSchema.safeParse(req.body);
       if (!parsed.success) {
-        res.status(400).json({ error: parsed.error.message });
+        res.status(400).json({ error: zodCustomErroFormat(parsed.error) });
         return;
       }
       const card = await cardService.createCard(req.user!.id, parsed.data);

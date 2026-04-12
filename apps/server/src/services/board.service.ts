@@ -2,7 +2,7 @@ import { prisma } from "@repo/db";
 
 export const boardService = {
   async getAllBoards(userId: string) {
-    await prisma.board.findMany({
+    const boards = await prisma.board.findMany({
       where: {
         members: {
           some: { userId },
@@ -22,7 +22,9 @@ export const boardService = {
         },
       },
     });
+    return boards;
   },
+
   async getBoardById(boardId: string, userId: string) {
     const board = await prisma.board.findUnique({
       where: { id: boardId },
@@ -50,7 +52,7 @@ export const boardService = {
     if (!board) {
       throw new Error("Board not found");
     }
-    const isBoardMember = board.members.some((x) => x.userId !== userId);
+    const isBoardMember = board.members.some((x) => x.userId === userId);
     if (!isBoardMember) {
       throw new Error("Access denied");
     }
@@ -90,6 +92,7 @@ export const boardService = {
     });
     return updatedBoard;
   },
+
   async deleteBoard(userId: string, boardId: string) {
     const member = await prisma.boardMember.findUnique({
       where: { userId_boardId: { userId, boardId } },

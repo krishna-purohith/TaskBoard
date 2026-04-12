@@ -44,6 +44,7 @@ export const memberService = {
     const member = await prisma.boardMember.findUnique({
       where: { userId_boardId: { userId, boardId } },
     });
+    console.log("Member: ", member);
     if (!member) throw new Error("Member not found");
 
     await prisma.boardMember.delete({

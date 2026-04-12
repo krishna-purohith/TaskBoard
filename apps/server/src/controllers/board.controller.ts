@@ -7,6 +7,7 @@ export const boardController = {
     try {
       const userId = req.user!.id;
       const boards = await boardService.getAllBoards(userId);
+      console.log("BOards: ", boards);
       res.status(200).json({
         boards,
       });
@@ -64,7 +65,7 @@ export const boardController = {
     try {
       const parsed = updateBoardSchema.safeParse(req.body);
       if (!parsed.success) {
-        res.status(400).json({ error: "All fields are required" });
+        res.status(400).json({ error: parsed.error.message });
         return;
       }
       const board = await boardService.updateBoard(
@@ -72,7 +73,7 @@ export const boardController = {
         req.user!.id,
         parsed.data
       );
-      res.status(201).json({ board });
+      res.status(200).json({ board });
     } catch (error) {
       if (error instanceof Error) {
         return res.status(400).json({
@@ -87,11 +88,10 @@ export const boardController = {
     try {
       const userId = req.user!.id;
 
-      const boardId = req.params.boardId;
-      if (!boardId) {
-        res.status(400).json({ error: "baordid is required" });
-      }
-      await boardService.deleteBoard(userId, boardId as string);
+      const boardId = req.params.id as string;
+      console.log("boardId: ", boardId);
+      await boardService.deleteBoard(userId, boardId);
+      res.status(204).send();
     } catch (error) {
       if (error instanceof Error) {
         res.status(400).json({ error: error.message });

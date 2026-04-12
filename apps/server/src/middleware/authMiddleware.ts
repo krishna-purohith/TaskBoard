@@ -14,7 +14,6 @@ export const authMiddleware = (
   next: NextFunction
 ) => {
   const token = req.cookies.token;
-  console.log("Cookie token: ", token);
 
   if (!token) {
     res.status(401).json({
@@ -24,8 +23,6 @@ export const authMiddleware = (
   }
   try {
     const decoded = jwt.verify(token, jwtConfig.secret) as JWTPayload;
-
-    console.log("decoded: ", decoded);
 
     req.user = { id: decoded.id };
     next();
