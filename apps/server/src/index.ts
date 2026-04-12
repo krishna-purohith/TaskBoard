@@ -10,6 +10,7 @@ import tagRouter from "./routes/tags";
 import commentRouter from "./routes/comments";
 import cors from "cors";
 import { strict } from "assert";
+import { errorMiddleware } from "./middleware/errorMiddleware";
 const PORT = process.env.PORT || 8080;
 
 const app = express();
@@ -29,6 +30,8 @@ app.use("/cards", cardRouter);
 app.use("/boards/:boardId/members", memberRouterr);
 app.use("/cards/:cardId/comments", commentRouter);
 app.use("/tags", tagRouter);
+
+app.use(errorMiddleware);
 
 app.listen(PORT, () =>
   console.log(`backend-server started running on ${PORT}`)

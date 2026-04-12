@@ -27,7 +27,6 @@ export const authController = {
       });
     } catch (err) {
       if (err instanceof Error) {
-        console.log("ERror: ", err);
         return res.status(400).json({
           error: err.message,
         });

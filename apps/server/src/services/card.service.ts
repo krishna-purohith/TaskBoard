@@ -1,5 +1,6 @@
 import { prisma } from "@repo/db";
 import { CreateCardInput, UpdateCardInput } from "../types/requestSchemas";
+import { NextFunction } from "express";
 
 export const cardService = {
   async createCard(userId: string, data: CreateCardInput) {
