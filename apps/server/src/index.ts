@@ -9,17 +9,10 @@ import memberRouterr from "./routes/members";
 import tagRouter from "./routes/tags";
 import commentRouter from "./routes/comments";
 import cors from "cors";
-import { strict } from "assert";
 import { errorMiddleware } from "./middleware/errorMiddleware";
 const PORT = process.env.PORT || 8080;
 
 const app = express();
-// app.use(
-//   cors({
-//     origin: ["http://localhost:3000", "https://web.postman.co"],
-//     credentials: true,
-//   })
-// );
 app.use(express.json());
 app.use(cookieparser());
 

@@ -2,6 +2,7 @@ import { prisma } from "@repo/db";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { jwtConfig } from "../config/jwt";
+import { AppError } from "../middleware/errorMiddleware";
 
 export const authService = {
   async signup(name: string, email: string, password: string) {
@@ -11,7 +12,7 @@ export const authService = {
 
     if (existingUser) {
       console.log("first");
-      throw new Error("User already exists.");
+      throw new AppError("User already exists.", 400);
     }
 
     const hashed = await bcrypt.hash(password, 10);
@@ -33,11 +34,11 @@ export const authService = {
   async login(email: string, password: string) {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      throw new Error("User doesnot exist. ");
+      throw new AppError("User doesnot exist. ", 400);
     }
     const verified = await bcrypt.compare(password, user.password);
     if (!verified) {
-      throw new Error("Invalid credentials");
+      throw new AppError("Invalid credentials", 400);
     }
     const token = jwt.sign(
       { id: user.id, name: user.name, email: user.email },
@@ -54,7 +55,7 @@ export const authService = {
     });
 
     if (!user) {
-      throw new Error("User not found");
+      throw new AppError("User not found", 400);
     }
     return user;
   },

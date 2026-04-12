@@ -1,6 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { loginSchema, signupSchema } from "../types/requestSchemas";
 import { authService } from "../services/auth.service";
+import { zodCustomErroFormat } from "../types/zodErrorFormat";
+import { success } from "zod";
 
 const cookieOptions = {
   httpOnly: true,
@@ -10,11 +12,13 @@ const cookieOptions = {
 };
 
 export const authController = {
-  async signup(req: Request, res: Response) {
+  async signup(req: Request, res: Response, next: NextFunction) {
     const parsed = signupSchema.safeParse(req.body);
     if (!parsed.success) {
       return res.status(400).json({
-        error: "All fields requried.",
+        error: zodCustomErroFormat(parsed.error),
+        data: null,
+        success: false,
       });
     }
     const { email, password, name } = parsed.data;
@@ -23,57 +27,46 @@ export const authController = {
       res.cookie("token", token, cookieOptions);
 
       res.status(201).json({
-        user,
+        data: user,
+        success: true,
+        error: null,
       });
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(400).json({
-          error: err.message,
-        });
-      }
-      res.status(500).json({
-        error: "Internal server error",
-      });
+      next(err);
     }
   },
 
-  async login(req: Request, res: Response) {
+  async login(req: Request, res: Response, next: NextFunction) {
     try {
       const parsed = loginSchema.safeParse(req.body);
       if (!parsed.success) {
         res.status(400).json({
-          error: "All fileds are required",
+          error: zodCustomErroFormat(parsed.error),
+          data: null,
+          success: false,
         });
         return;
       }
       const { email, password } = parsed.data;
       const { token, user } = await authService.login(email, password);
       res.cookie("token", token, cookieOptions);
-      res.status(200).json({ user });
+      res.status(200).json({ data: user, success: true, error: null });
     } catch (error) {
-      if (error instanceof Error) {
-        return res.status(400).json({ error: error.message });
-      }
-      res.status(500).json({
-        error: "Internal server error",
-      });
+      next(error);
     }
   },
 
   async logout(req: Request, res: Response) {
     res.clearCookie("token");
-    res.status(200).json({ message: "Logged out" });
+    res.status(200).json({ data: "Logged out", success: true, error: null });
   },
-  async me(req: Request, res: Response) {
+  async me(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await authService.me(req.user!.id);
 
-      res.status(200).json({ user });
+      res.status(200).json({ data: user, sucess: true, error: null });
     } catch (error) {
-      if (error instanceof Error) {
-        return res.status(400).json({ error: error.message });
-      }
-      res.status(500).json({ error: "Internal server erreor" });
+      next(error);
     }
   },
 };

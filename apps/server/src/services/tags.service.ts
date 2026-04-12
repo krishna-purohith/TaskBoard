@@ -1,4 +1,5 @@
 import { prisma } from "@repo/db";
+import { AppError } from "../middleware/errorMiddleware";
 
 export const tagService = {
   async getAllTags() {
@@ -19,10 +20,10 @@ export const tagService = {
       },
     });
 
-    if (!card) throw new Error("Card not found");
+    if (!card) throw new AppError("Card not found", 400);
 
     const isMember = card.column.board.members.some((m) => m.userId === userId);
-    if (!isMember) throw new Error("Access denied");
+    if (!isMember) throw new AppError("Access denied", 403);
 
     return await prisma.card.update({
       where: { id: cardId },
@@ -40,10 +41,10 @@ export const tagService = {
       },
     });
 
-    if (!card) throw new Error("Card not found");
+    if (!card) throw new AppError("Card not found", 400);
 
     const isMember = card.column.board.members.some((m) => m.userId === userId);
-    if (!isMember) throw new Error("Access denied");
+    if (!isMember) throw new AppError("Access denied", 403);
 
     return await prisma.card.update({
       where: { id: cardId },

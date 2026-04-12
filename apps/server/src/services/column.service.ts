@@ -1,4 +1,5 @@
 import { prisma } from "@repo/db";
+import { AppError } from "../middleware/errorMiddleware";
 
 export const columnService = {
   async createColumn(userId: string, boardId: string, title: string) {
@@ -6,7 +7,7 @@ export const columnService = {
       where: { userId_boardId: { userId, boardId } },
     });
 
-    if (!member) throw new Error("Access denied");
+    if (!member) throw new AppError("Access denied", 403);
 
     return await prisma.column.create({
       data: { title, boardId },
@@ -18,10 +19,10 @@ export const columnService = {
       include: { board: { include: { members: true } } },
     });
 
-    if (!column) throw new Error("Column not found");
+    if (!column) throw new AppError("Column not found", 400);
 
     const isMember = column.board.members.some((m) => m.userId === userId);
-    if (!isMember) throw new Error("Access denied");
+    if (!isMember) throw new AppError("Access denied", 403);
 
     return await prisma.column.update({
       where: { id: columnId },
@@ -35,10 +36,10 @@ export const columnService = {
       include: { board: { include: { members: true } } },
     });
 
-    if (!column) throw new Error("Column not found");
+    if (!column) throw new AppError("Column not found", 400);
 
     const isMember = column.board.members.some((m) => m.userId === userId);
-    if (!isMember) throw new Error("Access denied");
+    if (!isMember) throw new AppError("Access denied", 403);
 
     await prisma.column.delete({ where: { id: columnId } });
   },

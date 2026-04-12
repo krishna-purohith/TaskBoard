@@ -1,4 +1,5 @@
 import { prisma } from "@repo/db";
+import { AppError } from "../middleware/errorMiddleware";
 
 export const memberService = {
   async addMember(
@@ -11,17 +12,17 @@ export const memberService = {
       where: { userId_boardId: { userId: ownerId, boardId } },
     });
 
-    if (!ownerMembership) throw new Error("Access denied");
+    if (!ownerMembership) throw new AppError("Access denied", 403);
     if (ownerMembership.role !== "OWNER")
-      throw new Error("Only owners can add members");
+      throw new AppError("Only owners can add members", 403);
 
     const userToAdd = await prisma.user.findUnique({ where: { email } });
-    if (!userToAdd) throw new Error("User not found");
+    if (!userToAdd) throw new AppError("User not found", 400);
 
     const existing = await prisma.boardMember.findUnique({
       where: { userId_boardId: { userId: userToAdd.id, boardId } },
     });
-    if (existing) throw new Error("User is already a member");
+    if (existing) throw new AppError("User is already a member", 400);
 
     return await prisma.boardMember.create({
       data: { userId: userToAdd.id, boardId, role },
@@ -36,16 +37,17 @@ export const memberService = {
       where: { userId_boardId: { userId: ownerId, boardId } },
     });
 
-    if (!ownerMembership) throw new Error("Access denied");
+    if (!ownerMembership) throw new AppError("Access denied", 403);
     if (ownerMembership.role !== "OWNER")
-      throw new Error("Only owners can remove members");
-    if (ownerId === userId) throw new Error("Owner cannot remove themselves");
+      throw new AppError("Only owners can remove members", 403);
+    if (ownerId === userId)
+      throw new AppError("Owner cannot remove themselves", 403);
 
     const member = await prisma.boardMember.findUnique({
       where: { userId_boardId: { userId, boardId } },
     });
     console.log("Member: ", member);
-    if (!member) throw new Error("Member not found");
+    if (!member) throw new AppError("Member not found", 400);
 
     await prisma.boardMember.delete({
       where: { userId_boardId: { userId, boardId } },

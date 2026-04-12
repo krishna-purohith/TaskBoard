@@ -1,4 +1,5 @@
 import { prisma } from "@repo/db";
+import { AppError } from "../middleware/errorMiddleware";
 
 export const commentService = {
   async addComment(userId: string, cardId: string, content: string) {
@@ -9,10 +10,10 @@ export const commentService = {
       },
     });
 
-    if (!card) throw new Error("Card not found");
+    if (!card) throw new AppError("Card not found", 400);
 
     const isMember = card.column.board.members.some((m) => m.userId === userId);
-    if (!isMember) throw new Error("Access denied");
+    if (!isMember) throw new AppError("Access denied", 403);
 
     return await prisma.comment.create({
       data: { content, cardId, userId },
@@ -27,9 +28,9 @@ export const commentService = {
       where: { id: commentId },
     });
 
-    if (!comment) throw new Error("Comment not found");
+    if (!comment) throw new AppError("Comment not found", 400);
     if (comment.userId !== userId)
-      throw new Error("You can only delete your own comments");
+      throw new AppError("You can only delete your own comments", 403);
 
     await prisma.comment.delete({ where: { id: commentId } });
   },

@@ -1,4 +1,5 @@
 import { prisma } from "@repo/db";
+import { AppError } from "../middleware/errorMiddleware";
 
 export const boardService = {
   async getAllBoards(userId: string) {
@@ -50,11 +51,11 @@ export const boardService = {
       },
     });
     if (!board) {
-      throw new Error("Board not found");
+      throw new AppError("Board not found", 400);
     }
     const isBoardMember = board.members.some((x) => x.userId === userId);
     if (!isBoardMember) {
-      throw new Error("Access denied");
+      throw new AppError("Access denied", 403);
     }
     return board;
   },
@@ -84,7 +85,7 @@ export const boardService = {
       where: { userId_boardId: { userId, boardId } },
     });
     if (!member) {
-      throw new Error("Access denied");
+      throw new AppError("Access denied", 403);
     }
     const updatedBoard = await prisma.board.update({
       where: { id: boardId },
@@ -98,38 +99,13 @@ export const boardService = {
       where: { userId_boardId: { userId, boardId } },
     });
     if (!member) {
-      throw new Error("Access denied");
+      throw new AppError("Access denied", 403);
     }
     if (member.role !== "OWNER") {
-      throw new Error("Only the board owner can delete a board");
+      throw new AppError("Only the board owner can delete a board", 403);
     }
     await prisma.board.delete({
       where: { id: boardId },
     });
   },
-
-  //   async getBoardwithfullDetails(userId: string, boardId: string) {
-  //     const allboardsWithDetails = await prisma.board.findMany({
-  //       where: {
-  //         members: {
-  //           some: {
-  //             userId,
-  //           },
-  //         },
-  //       },
-  //       include: {
-  //         columns: {
-  //           include: {
-  //             cards: {
-  //               select: {
-  //                 id: true,
-  //                 title: true,
-  //                 priority: true,
-  //               },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     });
-  //   },
 };

@@ -1,6 +1,6 @@
 import { prisma } from "@repo/db";
 import { CreateCardInput, UpdateCardInput } from "../types/requestSchemas";
-import { NextFunction } from "express";
+import { AppError } from "../middleware/errorMiddleware";
 
 export const cardService = {
   async createCard(userId: string, data: CreateCardInput) {
@@ -9,10 +9,10 @@ export const cardService = {
       include: { board: { include: { members: true } } },
     });
 
-    if (!column) throw new Error("Column not found");
+    if (!column) throw new AppError("Column not found", 400);
 
     const isMember = column.board.members.some((m) => m.userId === userId);
-    if (!isMember) throw new Error("Access denied");
+    if (!isMember) throw new AppError("Access denied", 403);
 
     return await prisma.card.create({
       data: {
@@ -45,10 +45,10 @@ export const cardService = {
       },
     });
 
-    if (!card) throw new Error("Card not found");
+    if (!card) throw new AppError("Card not found", 400);
 
     const isMember = card.column.board.members.some((m) => m.userId === userId);
-    if (!isMember) throw new Error("Access denied");
+    if (!isMember) throw new AppError("Access denied", 403);
 
     return card;
   },
@@ -61,10 +61,10 @@ export const cardService = {
       },
     });
 
-    if (!card) throw new Error("Card not found");
+    if (!card) throw new AppError("Card not found", 400);
 
     const isMember = card.column.board.members.some((m) => m.userId === userId);
-    if (!isMember) throw new Error("Access denied");
+    if (!isMember) throw new AppError("Access denied", 403);
 
     return await prisma.card.update({
       where: { id: cardId },
@@ -83,10 +83,10 @@ export const cardService = {
       },
     });
 
-    if (!card) throw new Error("Card not found");
+    if (!card) throw new AppError("Card not found", 400);
 
     const isMember = card.column.board.members.some((m) => m.userId === userId);
-    if (!isMember) throw new Error("Access denied");
+    if (!isMember) throw new AppError("Access denied", 403);
 
     await prisma.card.delete({ where: { id: cardId } });
   },
