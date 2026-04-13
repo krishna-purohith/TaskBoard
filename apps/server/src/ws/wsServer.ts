@@ -19,6 +19,7 @@ export function setupWsServer(wss: WebSocketServer) {
       ws.close(1008, "Unauthorized");
       return;
     }
+
     try {
       const decoded = jwt.verify(token, jwtConfig.secret) as JWTPayload;
       ws.userId = decoded.id;
@@ -37,7 +38,7 @@ export function setupWsServer(wss: WebSocketServer) {
       }
     });
 
-    ws.on("close", (data) => {
+    ws.on("close", () => {
       if (ws.boardId) {
         leaveRoom(ws, ws.boardId);
       }
@@ -45,8 +46,9 @@ export function setupWsServer(wss: WebSocketServer) {
     });
   });
 }
+
 function parseCookies(cookieHeader: string) {
-  cookieHeader.split(";").reduce(
+  return cookieHeader.split(";").reduce(
     (acc, cookie) => {
       const [key, value] = cookie.split("=");
       if (key && value) {

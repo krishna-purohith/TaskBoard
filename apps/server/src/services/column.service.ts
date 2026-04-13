@@ -41,6 +41,7 @@ export const columnService = {
     const isMember = column.board.members.some((m) => m.userId === userId);
     if (!isMember) throw new AppError("Access denied", 403);
 
-    return await prisma.column.delete({ where: { id: columnId } });
+    await prisma.column.delete({ where: { id: columnId } });
+    return column;
   },
 };

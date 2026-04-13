@@ -14,7 +14,7 @@ export const cardService = {
     const isMember = column.board.members.some((m) => m.userId === userId);
     if (!isMember) throw new AppError("Access denied", 403);
 
-    return await prisma.card.create({
+    const card = await prisma.card.create({
       data: {
         title: data.title,
         columnId: data.columnId,
@@ -24,6 +24,7 @@ export const cardService = {
         assigneeId: data.assigneeId,
       },
     });
+    return { card, boardId: column.boardId };
   },
 
   async getCardById(userId: string, cardId: string) {
@@ -66,13 +67,14 @@ export const cardService = {
     const isMember = card.column.board.members.some((m) => m.userId === userId);
     if (!isMember) throw new AppError("Access denied", 403);
 
-    return await prisma.card.update({
+    const updatedCard = await prisma.card.update({
       where: { id: cardId },
       data: {
         ...data,
         dueDate: data.dueDate ? new Date(data.dueDate) : undefined,
       },
     });
+    return { boardId: card.column.boardId, updatedCard };
   },
 
   async deleteCard(userId: string, cardId: string) {
@@ -89,5 +91,6 @@ export const cardService = {
     if (!isMember) throw new AppError("Access denied", 403);
 
     await prisma.card.delete({ where: { id: cardId } });
+    return { boardId: card.column.boardId, card };
   },
 };
