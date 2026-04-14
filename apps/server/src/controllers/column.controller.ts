@@ -23,7 +23,13 @@ export const columnController = {
         parsed.data.boardId,
         parsed.data.title
       );
-      broadcastToBoard(column.boardId, { type: "COLUMN_CREATED", column });
+
+      broadcastToBoard(
+        parsed.data.boardId,
+        { type: "COLUMN_CREATED", column },
+        req.user!.id
+      );
+
       res.status(201).json({ data: column, success: true, error: null });
     } catch (error) {
       next(error);

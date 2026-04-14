@@ -19,6 +19,7 @@ export function errorMiddleware(
     return res.status(err.statusCode).json({
       success: false,
       error: err.message,
+      data: null,
     });
   }
 
@@ -29,6 +30,7 @@ export function errorMiddleware(
       success: false,
 
       error: "Invalid token",
+      data: null,
     });
   }
 
@@ -39,6 +41,7 @@ export function errorMiddleware(
       success: false,
 
       error: "Token expired",
+      data: null,
     });
   }
 
@@ -48,6 +51,7 @@ export function errorMiddleware(
       success: false,
 
       error: "Database error",
+      data: null,
     });
   }
   if (err.name === "PrismaClientUnknownRequestError") {
@@ -57,6 +61,7 @@ export function errorMiddleware(
       success: false,
 
       error: "Unexpected Database error",
+      data: null,
     });
   }
 
@@ -66,5 +71,6 @@ export function errorMiddleware(
     success: false,
 
     error: "Internal server error",
+    data: null,
   });
 }

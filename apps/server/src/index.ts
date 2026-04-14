@@ -8,6 +8,7 @@ import cardRouter from "./routes/card";
 import memberRouterr from "./routes/members";
 import tagRouter from "./routes/tags";
 import commentRouter from "./routes/comments";
+import userROuter from "./routes/users";
 import cors from "cors";
 import { errorMiddleware } from "./middleware/errorMiddleware";
 import http from "http";
@@ -17,6 +18,12 @@ import { setupWsServer } from "./ws/wsServer";
 const PORT = process.env.PORT || 8080;
 
 const app = express();
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieparser());
 
@@ -27,6 +34,7 @@ app.use("/cards", cardRouter);
 app.use("/boards/:boardId/members", memberRouterr);
 app.use("/cards/:cardId/comments", commentRouter);
 app.use("/tags", tagRouter);
+app.use("/users", userROuter);
 
 app.use(errorMiddleware);
 

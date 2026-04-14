@@ -9,7 +9,9 @@
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
     "db:push": "prisma push",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:seed2": "tsx scripts/seed2.ts"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +27,8 @@
   "dependencies": {
     "@prisma/adapter-pg": "7.7.0",
     "@prisma/client": "7.7.0",
+    "@types/bcrypt": "6.0.0",
+    "bcrypt": "6.0.0",
     "dotenv": "17.4.1",
     "pg": "8.20.0"
   }

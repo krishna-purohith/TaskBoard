@@ -44,6 +44,7 @@ export const boardService = {
                 assignee: {
                   select: { id: true, name: true, email: true },
                 },
+                tags: true,
               },
             },
           },

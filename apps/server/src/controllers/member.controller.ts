@@ -16,13 +16,16 @@ export const memberController = {
         });
         return;
       }
+      const boardId = req.params.boardId as string;
+
       const member = await memberService.addMember(
         req.user!.id,
-        req.params.boardId as string,
+        boardId,
         parsed.data.email,
         parsed.data.role
       );
-      broadcastToBoard(member.boardId, { type: "MEMBER_ADDED", member });
+
+      broadcastToBoard(boardId, { type: "MEMBER_ADDED", member });
       res.status(201).json({ data: member, error: null, success: true });
     } catch (error) {
       next(error);

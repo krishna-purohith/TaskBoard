@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Inter } from "next/font/google";
+import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/theme-provider";
+import Navbar from "@/components/Navbar";
+import AuthProvider from "@/components/AuthProvider";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -22,9 +29,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+    <html
+      lang="en"
+      className={cn("font-sans", inter.variable)}
+      suppressHydrationWarning
+    >
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground flex flex-col`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+          scriptProps={{ "data-cfasync": "false" }}
+        >
+          <AuthProvider>
+            <Navbar />
+            <main className="flex-1 overflow-hidden">{children}</main>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

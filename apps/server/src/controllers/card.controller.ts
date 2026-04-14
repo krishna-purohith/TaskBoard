@@ -31,12 +31,13 @@ export const cardsController = {
         });
         return;
       }
-      const { card, boardId } = await cardService.createCard(
-        req.user!.id,
-        parsed.data
+      const card = await cardService.createCard(req.user!.id, parsed.data);
+      broadcastToBoard(
+        card.boardId,
+        { type: "CARD_CREATED", card },
+        req.user!.id
       );
-      broadcastToBoard(boardId, { type: "CARD_CREATED", card });
-      res.status(201).json({ card });
+      res.status(201).json({ data: card, success: true, error: null });
     } catch (error) {
       next(error);
     }
@@ -53,12 +54,16 @@ export const cardsController = {
         });
         return;
       }
-      const { boardId, updatedCard } = await cardService.updateCard(
+      const updatedCard = await cardService.updateCard(
         req.user!.id,
         req.params.id as string,
         parsed.data
       );
-      broadcastToBoard(boardId, { type: "CARD_UPDATED", card: updatedCard });
+
+      broadcastToBoard(updatedCard.boardId, {
+        type: "CARD_UPDATED",
+        card: updatedCard,
+      });
 
       res.status(200).json({ data: updatedCard, success: true, error: null });
     } catch (error) {
@@ -68,12 +73,12 @@ export const cardsController = {
 
   async deleteCard(req: Request, res: Response, next: NextFunction) {
     try {
-      const { boardId, card } = await cardService.deleteCard(
+      const card = await cardService.deleteCard(
         req.user!.id,
         req.params.id as string
       );
 
-      broadcastToBoard(boardId, { type: "CARD_DELETED", cardId: card.id });
+      broadcastToBoard(card.boardId, { type: "CARD_DELETED", cardId: card.id });
 
       res.status(200).json({ success: true, data: null, error: null });
     } catch (error) {

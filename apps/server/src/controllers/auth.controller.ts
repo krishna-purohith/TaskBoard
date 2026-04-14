@@ -6,7 +6,8 @@ import { success } from "zod";
 
 const cookieOptions = {
   httpOnly: true,
-  secure: true,
+  secure: process.env.NODE_ENV === "production",
+  // secure: true,
   sameSite: "lax" as const,
   maxAge: 1000 * 60 * 60 * 7,
 };

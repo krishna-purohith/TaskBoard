@@ -18,6 +18,8 @@ export const authMiddleware = (
   if (!token) {
     res.status(401).json({
       error: "Unauthorized",
+      success: false,
+      data: null,
     });
     return;
   }
@@ -27,6 +29,6 @@ export const authMiddleware = (
     req.user = { id: decoded.id };
     next();
   } catch (error) {
-    res.status(401).json({ error: "Invalid token" });
+    next(error);
   }
 };

@@ -6,6 +6,14 @@ export type WSClientEvent =
   | { type: "JOIN_BOARD"; boardId: string }
   | { type: "LEAVE_BOARD"; boardId: string };
 
+export type BoardMemberWithUser = BoardMember & {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+};
+
 export type WSServerEvent =
   | { type: "CARD_CREATED"; card: Card }
   | { type: "CARD_UPDATED"; card: Card }
@@ -15,5 +23,5 @@ export type WSServerEvent =
   | { type: "COLUMN_DELTED"; columnId: string }
   | { type: "COMMENT_ADDED"; comment: Comment }
   | { type: "COMMENT_DELETED"; commentId: string }
-  | { type: "MEMBER_ADDED"; member: BoardMember }
+  | { type: "MEMBER_ADDED"; member: BoardMemberWithUser }
   | { type: "MEMBER_REMOVED"; memberId: string };

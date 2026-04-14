@@ -24,7 +24,7 @@ export const cardService = {
         assigneeId: data.assigneeId,
       },
     });
-    return { card, boardId: column.boardId };
+    return { ...card, boardId: column.boardId };
   },
 
   async getCardById(userId: string, cardId: string) {
@@ -74,7 +74,8 @@ export const cardService = {
         dueDate: data.dueDate ? new Date(data.dueDate) : undefined,
       },
     });
-    return { boardId: card.column.boardId, updatedCard };
+
+    return { ...updatedCard, boardId: card.column.boardId };
   },
 
   async deleteCard(userId: string, cardId: string) {
@@ -91,6 +92,6 @@ export const cardService = {
     if (!isMember) throw new AppError("Access denied", 403);
 
     await prisma.card.delete({ where: { id: cardId } });
-    return { boardId: card.column.boardId, card };
+    return { ...card, boardId: card.column.boardId };
   },
 };
