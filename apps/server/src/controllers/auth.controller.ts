@@ -4,12 +4,13 @@ import { authService } from "../services/auth.service";
 import { zodCustomErroFormat } from "../types/zodErrorFormat";
 import { success } from "zod";
 
+const isProduction = process.env.NODE_ENV === "production";
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  // secure: true,
+  secure: isProduction,
   sameSite: "lax" as const,
   maxAge: 1000 * 60 * 60 * 7,
+  domain: isProduction ? ".krishnap.dev" : undefined,
 };
 
 export const authController = {
