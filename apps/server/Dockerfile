@@ -21,6 +21,9 @@ COPY packages/db ./packages/db
 COPY packages/types ./packages/types
 COPY packages/typescript-config ./packages/typescript-config
 
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
 RUN pnpm turbo build --filter=server
 
 WORKDIR /app/apps/server
