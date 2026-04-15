@@ -59,7 +59,7 @@ export const authController = {
   },
 
   async logout(req: Request, res: Response) {
-    res.clearCookie("token");
+    res.clearCookie("token", { ...cookieOptions, maxAge: undefined });
     res.status(200).json({ data: "Logged out", success: true, error: null });
   },
   async me(req: Request, res: Response, next: NextFunction) {
