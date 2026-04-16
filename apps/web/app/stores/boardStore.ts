@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { Board, Column, Card, Comment, BoardMember, Tag } from "@repo/db";
+import { Board, Card, Column, Comment, Tag } from "@repo/db";
 import { BoardMemberWithUser } from "@repo/types";
+import { create } from "zustand";
 
 interface BoardWithRelations extends Board {
   columns: (Column & {
