@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "prisma generate && tsup",
-    "check-types": "tsc --noEmit",
+    "check-types": "prisma generate && tsc --noEmit",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
     "db:push": "prisma push",
