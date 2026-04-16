@@ -41,12 +41,7 @@ jobs:
         run: pnpm turbo run lint
 
       - name: BUild Dcker image
-        run: |
-          docker build -f apps/server/Dockerfile \
-            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
-            -t registry.digitalocean.com/docean/taskboard-server:latest \
-            -t registry.digitalocean.com/docean/taskboard-server:${{ github.sha }} \
-            .
+        run: docker build -f apps/server/Dockerfile --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} -t registry.digitalocean.com/docean/taskboard-server:latest -t registry.digitalocean.com/docean/taskboard-server:${{ github.sha }} .
 
       - name: Login to DO Registry
         run: |
