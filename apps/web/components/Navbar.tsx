@@ -32,6 +32,7 @@ export default function Navbar() {
 
         <div className="flex items-center gap-3">
           <ModeToggle />
+          {/* Add github link heree */}
           {user ? (
             <>
               <Button variant="ghost" onClick={() => router.push("/dashboard")}>

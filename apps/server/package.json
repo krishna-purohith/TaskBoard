@@ -5,8 +5,9 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
+    "check-types": "tsc --noEmit",
     "dev": "tsx watch src/index.ts",
-    "build": "tsc --noEmit && tsup",
+    "build": "tsup",
     "start": "node dist/index.js"
   },
   "keywords": [],

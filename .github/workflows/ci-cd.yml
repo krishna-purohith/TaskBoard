@@ -1,0 +1,71 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ci-cd:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm turbo run check-types
+
+      - name: Lint
+        run: pnpm turbo run lint
+
+      - name: Build
+        run: pnpm turbo run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Login to DO Registry
+        run: |
+          docker login registry.digitalocean.com \
+            -u ${{ secrets.DO_REGISTRY_EMAIL }} \
+            -p ${{ secrets.DO_REGISTRY_TOKEN }}
+
+      - name: BUild Dcker image
+        run: |
+          docker build -f apps/server/Dockerfile \
+            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            -t registry.digitalocean.com/docean/taskboard-server:latest \
+            -t registry.digitalocean.com/docean/taskboard-server:${{ github.sha }} \
+            .
+
+      - name: Push Docker image
+        run: |
+          docker push registry.digitalocean.com/docean/taskboard-server:latest
+          docker push registry.digitalocean.com/docean/taskboard-server:${{ github.sha }}
+
+      - name: Deploy to Droplet
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker login registry.digitalocean.com \
+              -u ${{ secrets.DO_REGISTRY_EMAIL }} \
+              -p ${{ secrets.DO_REGISTRY_TOKEN }}
+            docker compose -f /root/docker-compose.yml pull
+            docker compose -f /root/docker-compose.yml up -d
