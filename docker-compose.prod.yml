@@ -1,0 +1,8 @@
+services:
+  server:
+    image: registry.digitalocean.com/docean/taskboard-server:latest
+    ports:
+      - "8080:8080"
+    env_file:
+      - /root/.env
+    restart: always

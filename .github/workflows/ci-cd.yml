@@ -38,12 +38,6 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-      - name: Login to DO Registry
-        run: |
-          docker login registry.digitalocean.com \
-            -u ${{ secrets.DO_REGISTRY_EMAIL }} \
-            -p ${{ secrets.DO_REGISTRY_TOKEN }}
-
       - name: BUild Dcker image
         run: |
           docker build -f apps/server/Dockerfile \
@@ -51,6 +45,12 @@ jobs:
             -t registry.digitalocean.com/docean/taskboard-server:latest \
             -t registry.digitalocean.com/docean/taskboard-server:${{ github.sha }} \
             .
+
+      - name: Login to DO Registry
+        run: |
+          docker login registry.digitalocean.com \
+            -u ${{ secrets.DO_REGISTRY_EMAIL }} \
+            -p ${{ secrets.DO_REGISTRY_TOKEN }}
 
       - name: Push Docker image
         run: |
@@ -67,5 +67,5 @@ jobs:
             docker login registry.digitalocean.com \
               -u ${{ secrets.DO_REGISTRY_EMAIL }} \
               -p ${{ secrets.DO_REGISTRY_TOKEN }}
-            docker compose -f /root/docker-compose.yml pull
-            docker compose -f /root/docker-compose.yml up -d
+            docker compose -f /root/docker-compose.prod.yml pull
+            docker compose -f /root/docker-compose.prod.yml up -d
