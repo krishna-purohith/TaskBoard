@@ -29,6 +29,8 @@ jobs:
 
       - name: Type check
         run: pnpm turbo run check-types
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Lint
         run: pnpm turbo run lint
