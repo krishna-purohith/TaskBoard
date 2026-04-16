@@ -27,6 +27,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build
+        run: pnpm turbo run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
       - name: Type check
         run: pnpm turbo run check-types
         env:
@@ -34,11 +39,6 @@ jobs:
 
       - name: Lint
         run: pnpm turbo run lint
-
-      - name: Build
-        run: pnpm turbo run build
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: BUild Dcker image
         run: |
