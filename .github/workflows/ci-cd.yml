@@ -54,7 +54,7 @@ jobs:
           echo ${{ secrets.GITHUB_TOKEN }} | 
           docker login ghcr.io \
             -u ${{ github.actor }} \
-            -password-stdin
+            --password-stdin
 
       - name: Push Docker image
         run: |
