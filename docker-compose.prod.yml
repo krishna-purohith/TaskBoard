@@ -1,6 +1,6 @@
 services:
   server:
-    image: registry.digitalocean.com/docean/taskboard-server:latest
+    image: ghcr.io/krishna-purohith/taskboard-server:latest
     ports:
       - "8080:8080"
     env_file:

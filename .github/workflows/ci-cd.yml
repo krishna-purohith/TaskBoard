@@ -40,25 +40,26 @@ jobs:
       - name: Lint
         run: pnpm turbo run lint
 
-      - name: BUild Dcker image
+      - name: BUild Docker image
         run: |
-          IMAGE="registry.digitalocean.com/docean/taskboard-server"
+          IMAGE="ghcr.io/krishna-purohith/taskboard-server"
           docker build -f apps/server/Dockerfile \
             --build-arg "DATABASE_URL=${{ secrets.DATABASE_URL }}" \
             -t "${IMAGE}:latest" \
             -t "${IMAGE}:${{ github.sha }}" \
             .
 
-      - name: Login to DO Registry
+      - name: Login to Github Container Registry
         run: |
-          docker login registry.digitalocean.com \
-            -u ${{ secrets.DO_REGISTRY_EMAIL }} \
-            -p ${{ secrets.DO_REGISTRY_TOKEN }}
+          echo ${{ secrets.GITHUB_TOKEN }} | 
+          docker login ghcr.io \
+            -u ${{ github.actor }} \
+            -passowrd-stdin
 
       - name: Push Docker image
         run: |
-          docker push registry.digitalocean.com/docean/taskboard-server:latest
-          docker push registry.digitalocean.com/docean/taskboard-server:${{ github.sha }}
+          docker push ghcr.io/krishna-purohith/taskboard-server:latest
+          docker push ghcr.io/krishna-purohith/taskboard-server:${{ github.sha }}
 
       - name: Deploy to Droplet
         uses: appleboy/ssh-action@v1
