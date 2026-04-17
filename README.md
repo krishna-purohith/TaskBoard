@@ -2,7 +2,7 @@
 
 This Turborepo starter is maintained by the Turborepo core team.
 
-## Using this example
+## Using this examplee
 
 Run the following command:
 
