@@ -11,7 +11,6 @@ import { Label } from "@/components/ui/label";
 
 export default function SignupPage() {
   const router = useRouter();
-  const setUser = useAuthStore((state) => state.setUser);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -28,8 +27,8 @@ export default function SignupPage() {
       const res = await api.post<{
         data: { id: string; name: string; email: string };
       }>("/auth/signup", { name, email, password });
-      setUser(res.data);
-      router.push("/");
+      useAuthStore.getState().setUser(res.data);
+      router.push("/dashboard");
     } catch (err) {
       if (err instanceof Error) setError(err.message);
     } finally {
@@ -38,23 +37,23 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex items-center justify-center">
-      <div className="w-full max-w-md p-8 space-y-6 border rounded-lg shadow-sm">
+    <div className="flex flex-1 justify-center items-center py-12">
+      <div className="w-full max-w-md p-8 space-y-6 border rounded-lg">
         <div className="space-y-1">
           <h1 className="text-2xl font-bold">Create an account</h1>
           <p className="text-sm text-muted-foreground">Get started for free</p>
         </div>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Name</Label>
             <Input
               id="name"
               type="text"
-              placeholder="Krishna"
+              placeholder="John Doe"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
 
@@ -67,6 +66,7 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
 
@@ -79,6 +79,7 @@ export default function SignupPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
 

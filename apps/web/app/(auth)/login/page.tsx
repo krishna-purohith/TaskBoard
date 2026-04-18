@@ -11,7 +11,6 @@ import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
   const router = useRouter();
-  const setUser = useAuthStore((state) => state.setUser);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +26,7 @@ export default function LoginPage() {
       const res = await api.post<{
         data: { id: string; name: string; email: string };
       }>("/auth/login", { email, password });
-      setUser(res.data);
+      useAuthStore.getState().setUser(res.data);
       router.push("/dashboard");
     } catch (err) {
       if (err instanceof Error) setError(err.message);
@@ -37,8 +36,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="w-full max-w-md p-8 space-y-6 border rounded-lg shadow-sm">
+    <div className="flex-1 flex items-center justify-center py-12">
+      <div className="w-full max-w-md p-8 space-y-6 border rounded-lg">
         <div className="space-y-1">
           <h1 className="text-2xl font-bold">Welcome back</h1>
           <p className="text-sm text-muted-foreground">
@@ -56,6 +55,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
 
@@ -68,6 +68,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
 
@@ -88,6 +89,19 @@ export default function LoginPage() {
             Signup
           </Link>
         </p>
+        <div className="flex items-center justify-center mt-20">
+          <Button
+            className="bg-gray-800 text-gray-500 cursor-pointer 
+                
+            "
+            onClick={() => {
+              setEmail("krishna@gmail.com");
+              setPassword("password123");
+            }}
+          >
+            Test Credentials
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -64,14 +64,16 @@ export default function Navbar() {
                   </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent className="w-40" align="end">
+                <DropdownMenuContent className="min-w-max" align="end">
                   <DropdownMenuGroup>
-                    <DropdownMenuLabel className="text-sm text-muted-foreground font-bold flex flex-col gap-1">
-                      My Account
-                      <p className="text text-muted-foreground font-normal">
+                    <DropdownMenuLabel className="flex flex-col gap-1">
+                      <span className="text-sm text-secondary-foreground/90">
+                        My Account
+                      </span>
+                      <p className="text-sm text-muted-foreground font-normal text-wrap">
                         {user.name}
                       </p>
-                      <p className="font-normal text-muted-foreground">
+                      <p className="text-sm font-normal text-muted-foreground">
                         {user.email}
                       </p>
                     </DropdownMenuLabel>
