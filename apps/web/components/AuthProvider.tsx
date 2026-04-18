@@ -9,18 +9,15 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const setUser = useAuthStore((state) => state.setUser);
-  const clearUser = useAuthStore((state) => state.clearUser);
-
   useEffect(() => {
     async function initAuth() {
       try {
         const res = await api.get<{
           data: { id: string; name: string; email: string };
         }>("/auth/me");
-        setUser(res.data);
+        useAuthStore.getState().setUser(res.data);
       } catch {
-        clearUser();
+        useAuthStore.getState().clearUser();
       }
     }
     initAuth();

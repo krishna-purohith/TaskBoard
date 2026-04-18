@@ -6,69 +6,106 @@ import { api } from "@/lib/api";
 import { LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ButtonSkeleton } from "./ButtonSkeleton";
+import GithubLogo from "./GithubIcon";
 import { ModeToggle } from "./theme-toggle";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
-  const clearUser = useAuthStore((state) => state.clearUser);
+  const isLoading = useAuthStore((state) => state.isLoading);
 
   async function handleLogout() {
     await api.post("/auth/logout", {});
-    clearUser();
+    useAuthStore.getState().clearUser();
     router.push("/");
   }
 
   return (
-    <header className="border-b bg-secondary sticky top-0 z-50">
+    <header className="border-b bg-secondary sticky top-4 z-500 mb-4">
       <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
         <Link
           href="/"
           className="flex items-center gap-2 font-bold text-lg hover:opacity-80 transition-opacity"
         >
           <LayoutDashboard className="h-8 w-8 text-teal-400" />
-          <span className="text-teal-500">TaskBoard</span>
+          <span className="">TaskBoard</span>
         </Link>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
+          <Link
+            href="https://github.com/krishna-purohith/taskboard"
+            target="_blank"
+          >
+            <GithubLogo />
+          </Link>
           <ModeToggle />
-          {/* Add github link heree */}
-          {user ? (
+          {isLoading ? (
+            <div className="flex gap-3">
+              <ButtonSkeleton className="h-7 w-16 bg-muted-foreground/10 rounded-md animate-pulse" />
+              <ButtonSkeleton className="h-7 w-16 bg-muted-foreground/10 rounded-md animate-pulse" />
+            </div>
+          ) : user ? (
             <>
-              <Button variant="ghost" onClick={() => router.push("/dashboard")}>
-                Dashboard
-              </Button>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-primary-foreground text-sm font-bold">
-                  {user.name.charAt(0).toUpperCase()}
-                </div>
-                <span className="text-sm font-medium hidden sm:block">
-                  {user.name}
-                </span>
-              </div>
-              <Button
-                className="cursor-pointer"
-                variant="outline"
-                size="sm"
-                onClick={handleLogout}
-              >
-                Logout
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="cursor-pointer bg-[#0e538b] hover:bg-[#1763a1] transition-colors border border-[#6f6f6f] font-bold">
+                    {user.name.charAt(0).toUpperCase()}
+                  </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent className="w-40" align="end">
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel className="text-sm text-muted-foreground font-bold flex flex-col gap-1">
+                      My Account
+                      <p className="text text-muted-foreground font-normal">
+                        {user.name}
+                      </p>
+                      <p className="font-normal text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </DropdownMenuLabel>
+                  </DropdownMenuGroup>
+
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link href="/dashboard">Dashboard</Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      variant="destructive"
+                      className="cursor-pointer"
+                    >
+                      Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           ) : (
             <>
-              <Button
-                className="cursor-pointer"
-                variant="ghost"
-                onClick={() => router.push("/login")}
-              >
-                Login
+              <Button asChild variant="outline" size={"sm"}>
+                <Link href="/login">Login</Link>
               </Button>
               <Button
-                className="cursor-pointer"
-                onClick={() => router.push("/signup")}
+                className="bg-accent-foreground text-background"
+                asChild
+                size={"sm"}
               >
-                Signup
+                <Link href="/signup">Signup</Link>
               </Button>
             </>
           )}

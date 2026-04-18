@@ -1,65 +1,16 @@
-"use client";
-
-import Link from "next/link";
-import { useAuthStore } from "@/app/stores/authStore";
-import { Button } from "@/components/ui/button";
-import {
-  Zap,
-  Users,
-  LayoutDashboard,
-  MessageSquare,
-  Tag,
-  Shield,
-} from "lucide-react";
 import Image from "next/image";
 import k1 from "@/public/ss/k1.png";
 import k2 from "@/public/ss/k2.png";
 import k3 from "@/public/ss/k3.png";
-
-const features = [
-  {
-    icon: Zap,
-    title: "Real-time collaboration",
-    description:
-      "Changes appear instantly for every board member. No refresh needed — powered by WebSockets.",
-  },
-  {
-    icon: Users,
-    title: "Team boards",
-    description:
-      "Create boards and invite teammates. Everyone sees the same board, updated live.",
-  },
-  {
-    icon: LayoutDashboard,
-    title: "Flexible columns",
-    description:
-      "Organise work your way. Create any columns you need — Todo, In Progress, Done, or anything else.",
-  },
-  {
-    icon: Tag,
-    title: "Tags and priorities",
-    description:
-      "Label cards with colour-coded tags and set priority levels to keep the team focused.",
-  },
-  {
-    icon: MessageSquare,
-    title: "Card comments",
-    description:
-      "Discuss work directly on the card. Keep all context in one place.",
-  },
-  {
-    icon: Shield,
-    title: "Role-based access",
-    description:
-      "Owners manage the board and members. Members can edit without being able to disrupt team structure.",
-  },
-];
+import { HomeCTAs } from "@/components/HomeCTAs";
+import { features } from "@/lib/constants/features";
+import { Zap } from "lucide-react";
+import Link from "next/link";
+import GithubLogo from "@/components/GithubIcon";
 
 export default function HomePage() {
-  const user = useAuthStore((state) => state.user);
-
   return (
-    <div className="min-h-screen">
+    <div>
       <section className="max-w-4xl mx-auto px-6 pt-24 pb-20 text-center">
         <div className="inline-flex items-center gap-2 text-xs font-medium text-primary bg-primary/10 px-3 py-1.5 rounded-full mb-6">
           <Zap className="h-3 w-3" />
@@ -78,21 +29,8 @@ export default function HomePage() {
           updates.
         </p>
 
-        <div className="flex items-center justify-center gap-3">
-          {user ? (
-            <Button size="lg" asChild>
-              <Link href="/dashboard">Go to Dashboard</Link>
-            </Button>
-          ) : (
-            <>
-              <Button size="lg" asChild>
-                <Link href="/signup">Get started free</Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/login">Sign in</Link>
-              </Button>
-            </>
-          )}
+        <div className="flex items-center justify-center gap-5">
+          <HomeCTAs />
         </div>
       </section>
 
@@ -106,8 +44,8 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="space-y-4">
-          <div className="rounded-xl overflow-hidden border border-border/60 shadow-sm mb-20">
+        <div className="flex flex-col gap-20">
+          <div className="rounded-xl overflow-hidden border border-border/60">
             <Image
               src={k1}
               alt="TaskBoard dashboard"
@@ -115,14 +53,14 @@ export default function HomePage() {
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-xl overflow-hidden border border-border/60 shadow-sm">
+            <div className="rounded-xl overflow-hidden border border-border/60">
               <Image
                 src={k2}
                 alt="Board view"
                 className="w-full object-cover"
               />
             </div>
-            <div className="rounded-xl overflow-hidden border border-border/60 shadow-sm">
+            <div className="rounded-xl overflow-hidden border border-border/60">
               <Image
                 src={k3}
                 alt="Card detail"
@@ -169,22 +107,26 @@ export default function HomePage() {
           <p className="text-muted-foreground mb-8">
             Create a board in seconds. Invite your team. Start collaborating.
           </p>
-          {user ? (
-            <Button size="lg" asChild>
-              <Link href="/dashboard">Go to Dashboard</Link>
-            </Button>
-          ) : (
-            <Button size="lg" asChild>
-              <Link href="/signup">Get started free</Link>
-            </Button>
-          )}
+          <div className="flex items-center justify-center gap-5">
+            <HomeCTAs />
+          </div>
         </div>
       </section>
 
-      <footer className="border-t">
+      <footer className="border-t bg-secondary">
         <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between text-xs text-muted-foreground">
-          <span>TaskBoard</span>
+          <span>© 2026 Krishna Purohith</span>
+
           <span>Built with Next.js, Express, WebSockets and Prisma</span>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="https://github.com/krishna-purohith/taskboard"
+              target="_blank"
+            >
+              <GithubLogo />
+            </Link>
+          </div>
         </div>
       </footer>
     </div>
