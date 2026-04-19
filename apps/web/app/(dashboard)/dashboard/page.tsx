@@ -7,6 +7,7 @@ import { Board } from "@repo/db";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SpinnerCustom } from "@/components/SpinnerCustom";
 
 export default function BoardsPage() {
   const router = useRouter();
@@ -56,8 +57,8 @@ export default function BoardsPage() {
 
   if (loading)
     return (
-      <div className="flex items-center justify-center h-full p-8">
-        <p className="text-muted-foreground">Loading boards...</p>
+      <div className="flex-1 flex items-center justify-center ">
+        <SpinnerCustom loadingMessage="Loading Boards..." />
       </div>
     );
 

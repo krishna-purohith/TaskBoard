@@ -5,7 +5,6 @@ const publicRoutes = ["/login", "/signup", "/"];
 export async function proxy(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   const { pathname } = req.nextUrl;
-
   const isPublicRoute = publicRoutes.includes(pathname);
   const isAuthRoute = pathname === "/login" || pathname === "/signup";
 

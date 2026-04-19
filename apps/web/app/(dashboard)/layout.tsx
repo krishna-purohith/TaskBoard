@@ -1,37 +1,39 @@
 "use client";
 
+import { useAuthStore } from "@/app/stores/authStore";
+import { SpinnerCustom } from "@/components/SpinnerCustom";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/app/stores/authStore";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const isLoading = useAuthStore((state) => state.isLoading);
+  const router = useRouter();
+
   useEffect(() => {
     if (!isLoading && !user) {
-      console.log("redirecting to login");
-
+      useAuthStore.getState().clearUser();
       router.push("/login");
     }
-  }, [user, isLoading]);
+  }, [user, isLoading, router]);
 
   if (isLoading)
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
+      <div className="flex-1 flex items-center justify-center">
+        <SpinnerCustom loadingMessage="Loading..." />
       </div>
     );
 
-  if (!user) return null;
+  if (!user)
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <SpinnerCustom loadingMessage="Redirecting..." />
+      </div>
+    );
 
-  return (
-    <div className="h-[calc(100vh-3.5rem)] flex flex-col">
-      <main className="flex-1 overflow-hidden">{children}</main>
-    </div>
-  );
+  return <>{children}</>;
 }

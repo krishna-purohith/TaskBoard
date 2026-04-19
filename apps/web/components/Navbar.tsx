@@ -32,8 +32,8 @@ export default function Navbar() {
   }
 
   return (
-    <header className="border-b bg-secondary sticky top-4 z-500 mb-4">
-      <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+    <header className="border-b bg-secondary sticky top-0 z-500">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link
           href="/"
           className="flex items-center gap-2 font-bold text-lg hover:opacity-80 transition-opacity"
@@ -64,7 +64,7 @@ export default function Navbar() {
                   </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent className="min-w-max" align="end">
+                <DropdownMenuContent className="min-w-max mt-4" align="end">
                   <DropdownMenuGroup>
                     <DropdownMenuLabel className="flex flex-col gap-1">
                       <span className="text-sm text-secondary-foreground/90">
