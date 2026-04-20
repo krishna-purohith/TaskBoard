@@ -1,16 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { BoardWithRelations, useBoardStore } from "@/app/stores/boardStore";
 import { connectWs, disconnectWs } from "@/lib/ws";
 import BoardView from "@/components/BoardView";
+import { SpinnerCustom } from "@/components/SpinnerCustom";
 
 export default function BoardPage() {
   const { boardId } = useParams<{ boardId: string }>();
 
   const board = useBoardStore((state) => state.board);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const { setBoard, clearBoard } = useBoardStore.getState();
@@ -22,6 +24,9 @@ export default function BoardPage() {
         connectWs(boardId);
       } catch (err) {
         console.error(err);
+        if (err instanceof Error) {
+          setError(err.message);
+        }
       }
     }
 
@@ -33,10 +38,18 @@ export default function BoardPage() {
     };
   }, [boardId]);
 
+  if (error) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <p className="text-destructive">{error}</p>
+      </div>
+    );
+  }
+
   if (!board)
     return (
-      <div className="flex items-center justify-center h-full">
-        <p className="text-muted-foreground">Loading board...</p>
+      <div className="flex-1 flex items-center justify-center">
+        <SpinnerCustom loadingMessage="Loading board details..." />
       </div>
     );
 

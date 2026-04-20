@@ -16,7 +16,7 @@ export default function BoardView() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem)]">
-      <div className="px-6 py-3 border-b bg-background/80 backdrop-blur-sm flex items-center justify-between shrink-0">
+      <div className="px-6 py-3 bg-background/80  flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <div>
             <div className="flex items-center gap-2">
@@ -27,6 +27,7 @@ export default function BoardView() {
                 </span>
               )}
             </div>
+
             {board.description && (
               <p className="text-xs text-muted-foreground mt-0.5">
                 {board.description}
@@ -34,6 +35,7 @@ export default function BoardView() {
             )}
           </div>
         </div>
+
         <div className="flex items-center gap-3">
           <div className="flex items-center">
             {board.members.map((m, index) => (
