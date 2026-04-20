@@ -24,9 +24,11 @@ export default function LoginPage() {
 
     try {
       const res = await api.post<{
-        data: { id: string; name: string; email: string };
+        id: string;
+        name: string;
+        email: string;
       }>("/auth/login", { email, password });
-      useAuthStore.getState().setUser(res.data);
+      useAuthStore.getState().setUser(res);
       router.push("/dashboard");
     } catch (err) {
       if (err instanceof Error) setError(err.message);

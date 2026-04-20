@@ -12,10 +12,12 @@ export default function AuthProvider({
   useEffect(() => {
     async function initAuth() {
       try {
-        const res = await api.get<{
-          data: { id: string; name: string; email: string };
+        const data = await api.get<{
+          id: string;
+          name: string;
+          email: string;
         }>("/auth/me");
-        useAuthStore.getState().setUser(res.data);
+        useAuthStore.getState().setUser(data);
       } catch {
         useAuthStore.getState().clearUser();
       }

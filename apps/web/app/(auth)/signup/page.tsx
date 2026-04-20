@@ -24,10 +24,12 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const res = await api.post<{
-        data: { id: string; name: string; email: string };
+      const data = await api.post<{
+        id: string;
+        name: string;
+        email: string;
       }>("/auth/signup", { name, email, password });
-      useAuthStore.getState().setUser(res.data);
+      useAuthStore.getState().setUser(data);
       router.push("/dashboard");
     } catch (err) {
       if (err instanceof Error) setError(err.message);

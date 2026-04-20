@@ -2,7 +2,7 @@ import { Board, Card, Column, Comment, Tag } from "@repo/db";
 import { BoardMemberWithUser } from "@repo/types";
 import { create } from "zustand";
 
-interface BoardWithRelations extends Board {
+export interface BoardWithRelations extends Board {
   columns: (Column & {
     cards: (Card & {
       tags?: Tag[];

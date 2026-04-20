@@ -1,16 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { Board } from "@repo/db";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SpinnerCustom } from "@/components/SpinnerCustom";
+import Link from "next/link";
 
 export default function BoardsPage() {
-  const router = useRouter();
   const [boards, setBoards] = useState<Board[]>([]);
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("");
@@ -18,17 +17,19 @@ export default function BoardsPage() {
   const [creating, setCreating] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState("");
+  const [fetchError, setFetchError] = useState("");
 
   useEffect(() => {
     async function fetchBoards() {
-      console.log("fetching boards...");
       try {
-        const res = await api.get<{ data: Board[] }>("/boards");
-        console.log("boards response:", res);
-        setBoards(res.data);
-      } catch (err) {
-        console.log("boards error:", err);
-        if (err instanceof Error) setError(err.message);
+        const boards = await api.get<Board[]>("/boards");
+
+        setBoards(boards);
+      } catch (e) {
+        console.error(e);
+        if (e instanceof Error) {
+          setFetchError(e.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -40,11 +41,11 @@ export default function BoardsPage() {
     e.preventDefault();
     setCreating(true);
     try {
-      const res = await api.post<{ data: Board }>("/boards", {
+      const res = await api.post<Board>("/boards", {
         title,
         description,
       });
-      setBoards((prev) => [...prev, res.data]);
+      setBoards((prev) => [...prev, res]);
       setTitle("");
       setDescription("");
       setShowForm(false);
@@ -62,8 +63,15 @@ export default function BoardsPage() {
       </div>
     );
 
+  if (fetchError)
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <p className="text-destructive">{fetchError}</p>
+      </div>
+    );
+
   return (
-    <div className="p-8 space-y-6">
+    <div className="max-w-6xl mx-auto p-8 space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl text-primary font-bold">Your Boards</h2>
         <Button
@@ -87,6 +95,7 @@ export default function BoardsPage() {
               onChange={(e) => setTitle(e.target.value)}
               placeholder="My Board"
               required
+              disabled={creating}
             />
           </div>
           <div className="space-y-2">
@@ -96,6 +105,7 @@ export default function BoardsPage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Optional description"
+              disabled={creating}
             />
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
@@ -106,27 +116,28 @@ export default function BoardsPage() {
       )}
 
       {boards.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
           <p className="text-muted-foreground">No boards yet.</p>
           <p className="text-sm text-muted-foreground">
             Create your first board to get started.
           </p>
+          <Button onClick={() => setShowForm(true)}>
+            Create your first board
+          </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {boards.map((board) => (
-            <div
-              key={board.id}
-              onClick={() => router.push(`/boards/${board.id}`)}
-              className="border rounded-lg p-6 cursor-pointer hover:shadow-md transition-shadow space-y-2"
-            >
-              <h3 className="font-semibold text-lg">{board.title}</h3>
-              {board.description && (
-                <p className="text-sm text-muted-foreground">
-                  {board.description}
-                </p>
-              )}
-            </div>
+            <Link href={`/boards/${board.id}`} key={board.id}>
+              <div className="bg-secondary/70 border rounded-lg p-6 cursor-pointer hover:border-primary transition-colors space-y-2 hover:shadow-xs shadow-foreground">
+                <h3 className="font-semibold text-lg">{board.title}</h3>
+                {board.description && (
+                  <p className="text-sm text-muted-foreground">
+                    {board.description}
+                  </p>
+                )}
+              </div>
+            </Link>
           ))}
         </div>
       )}

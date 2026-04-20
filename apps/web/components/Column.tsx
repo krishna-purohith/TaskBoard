@@ -37,10 +37,10 @@ export default function Column({ column }: Props) {
       return;
     }
     try {
-      const res = await api.put<{ data: ColumnType }>(`/columns/${column.id}`, {
+      const data = await api.put<ColumnType>(`/columns/${column.id}`, {
         title,
       });
-      updateColumn(res.data);
+      updateColumn(data);
     } catch (err) {
       console.error(err);
     } finally {

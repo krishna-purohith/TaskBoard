@@ -57,13 +57,13 @@ export default function CardDetail({ cardId, open, onClose }: Props) {
     async function fetchCard() {
       try {
         const [cardRes, tagsRes] = await Promise.all([
-          api.get<{ data: CardWithRelations }>(`/cards/${cardId}`),
-          api.get<{ data: Tag[] }>("/tags"),
+          api.get<CardWithRelations>(`/cards/${cardId}`),
+          api.get<Tag[]>("/tags"),
         ]);
-        setCard(cardRes.data);
-        setTitle(cardRes.data.title);
-        setDescription(cardRes.data.description || "");
-        setAllTags(tagsRes.data);
+        setCard(cardRes);
+        setTitle(cardRes.title);
+        setDescription(cardRes.description || "");
+        setAllTags(tagsRes);
       } catch (err) {
         console.error(err);
       } finally {
@@ -80,10 +80,10 @@ export default function CardDetail({ cardId, open, onClose }: Props) {
       return;
     }
     try {
-      const res = await api.put<{ data: Card }>(`/cards/${card.id}`, {
+      const res = await api.put<Card>(`/cards/${card.id}`, {
         title,
       });
-      updateCard(res.data);
+      updateCard(res);
       setCard((prev) => (prev ? { ...prev, title } : prev));
     } catch (err) {
       console.error(err);
@@ -95,10 +95,10 @@ export default function CardDetail({ cardId, open, onClose }: Props) {
   async function handleUpdateDescription() {
     if (!card) return;
     try {
-      const res = await api.put<{ data: Card }>(`/cards/${card.id}`, {
+      const res = await api.put<Card>(`/cards/${card.id}`, {
         description,
       });
-      updateCard(res.data);
+      updateCard(res);
       setCard((prev) => (prev ? { ...prev, description } : prev));
     } catch (err) {
       console.error(err);
@@ -108,13 +108,11 @@ export default function CardDetail({ cardId, open, onClose }: Props) {
   async function handleUpdatePriority(priority: string) {
     if (!card) return;
     try {
-      const res = await api.put<{ data: Card }>(`/cards/${card.id}`, {
+      const res = await api.put<Card>(`/cards/${card.id}`, {
         priority,
       });
-      updateCard(res.data);
-      setCard((prev) =>
-        prev ? { ...prev, priority: res.data.priority } : prev
-      );
+      updateCard(res);
+      setCard((prev) => (prev ? { ...prev, priority: res.priority } : prev));
     } catch (err) {
       console.error(err);
     }
@@ -123,14 +121,14 @@ export default function CardDetail({ cardId, open, onClose }: Props) {
   async function handleAddComment() {
     if (!card || !comment.trim()) return;
     try {
-      const res = await api.post<{
-        data: Comment & {
+      const res = await api.post<
+        Comment & {
           user: { id: string; name: string; email: string };
-        };
-      }>(`/cards/${card.id}/comments`, { content: comment });
-      addComment(res.data);
+        }
+      >(`/cards/${card.id}/comments`, { content: comment });
+      addComment(res);
       setCard((prev) =>
-        prev ? { ...prev, comments: [...prev.comments, res.data] } : prev
+        prev ? { ...prev, comments: [...prev.comments, res] } : prev
       );
       setComment("");
     } catch (err) {

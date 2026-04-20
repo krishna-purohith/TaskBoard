@@ -15,21 +15,32 @@ async function apiFetch<T>(
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      ...options.headers,
     },
   });
 
-  if (!res.ok) {
-    const error: ApiErrorResponse = await res
-      .json()
-      .catch(() => ({ error: "Network error", success: false, data: null }));
-    throw new Error(error.error || "Something went wrong");
+  const apiResponse = await res.json().catch(
+    (): ApiErrorResponse => ({
+      success: false,
+      error: "Invalid server response",
+      data: null,
+    })
+  );
+  console.log("apiResponse:", apiResponse);
+
+  if (!apiResponse.success) {
+    throw new Error(apiResponse.error);
   }
-  return res.json();
+  console.log("apiResponsekkk:", apiResponse);
+
+  return apiResponse.data as T;
 }
 
 export const api = {
   get<T>(endpoint: string) {
-    return apiFetch<T>(endpoint);
+    return apiFetch<T>(endpoint, {
+      method: "GET",
+    });
   },
 
   post<T>(endpoint: string, body: unknown) {

@@ -66,7 +66,7 @@ export const authController = {
     try {
       const user = await authService.me(req.user!.id);
 
-      res.status(200).json({ data: user, sucess: true, error: null });
+      res.status(200).json({ data: user, success: true, error: null });
     } catch (error) {
       next(error);
     }

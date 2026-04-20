@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
-import { useBoardStore } from "@/app/stores/boardStore";
+import { BoardWithRelations, useBoardStore } from "@/app/stores/boardStore";
 import { connectWs, disconnectWs } from "@/lib/ws";
 import BoardView from "@/components/BoardView";
 
@@ -17,8 +17,8 @@ export default function BoardPage() {
 
     async function fetchBoard() {
       try {
-        const res = await api.get<{ data: any }>(`/boards/${boardId}`);
-        setBoard(res.data);
+        const board = await api.get<BoardWithRelations>(`/boards/${boardId}`);
+        setBoard(board);
         connectWs(boardId);
       } catch (err) {
         console.error(err);

@@ -13,7 +13,7 @@ export default function DashboardLayout({
   const user = useAuthStore((state) => state.user);
   const isLoading = useAuthStore((state) => state.isLoading);
   const router = useRouter();
-
+  console.log("d-layout-k:", user);
   useEffect(() => {
     if (!isLoading && !user) {
       useAuthStore.getState().clearUser();
