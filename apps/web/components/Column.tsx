@@ -95,7 +95,7 @@ export default function Column({ column }: Props) {
               <MoreHorizontal className="h-3.5 w-3.5" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-36">
+          <DropdownMenuContent align="end" className="w-36 cursor-pointer">
             <DropdownMenuItem onClick={() => setEditing(true)}>
               Rename
             </DropdownMenuItem>
@@ -120,9 +120,10 @@ export default function Column({ column }: Props) {
         )}
       </div>
 
-      <div className="px-2 py-2 border-t border-dashed border-border/50">
+      <div className="px-2 py-2 border-t border-dashed border-border/50 cursor-pointer">
         <AddCard columnId={column.id} />
       </div>
+      <div className="px-2 py-2" />
     </div>
   );
 }

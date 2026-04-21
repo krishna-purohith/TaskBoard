@@ -32,7 +32,7 @@ export default function AddCard({ columnId }: { columnId: string }) {
     return (
       <button
         onClick={() => setAdding(true)}
-        className="w-full flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm py-1 transition-colors"
+        className="w-full flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm py-1 transition-colors cursor-pointer"
       >
         <Plus className="h-3 w-3" />
         Add card
@@ -50,8 +50,8 @@ export default function AddCard({ columnId }: { columnId: string }) {
         autoFocus
         className="h-8 text-sm"
       />
-      <div className="flex gap-2">
-        <Button size="sm" onClick={handleAdd}>
+      <div className="flex gap-2 cursor-pointer">
+        <Button size="sm" onClick={handleAdd} className="cursor-pointer">
           Add
         </Button>
         <Button
