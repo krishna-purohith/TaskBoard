@@ -1,5 +1,7 @@
 import { WSClientEvent, WSServerEvent } from "@repo/types";
 import { useBoardStore } from "@/app/stores/boardStore";
+import { useAuthStore } from "@/app/stores/authStore";
+import { toast } from "sonner";
 
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8080/ws";
 
@@ -44,9 +46,25 @@ function handleEvent(event: WSServerEvent) {
     case "MEMBER_ADDED":
       store.addMember(event.member);
       break;
-    case "MEMBER_REMOVED":
-      store.removeMember(event.memberId);
+    case "MEMBER_REMOVED": {
+      const currentUser = useAuthStore.getState().user;
+      if (currentUser?.id === event.memberId) {
+        disconnectWs();
+        useBoardStore.getState().clearBoard();
+        toast.error("You have been removed from this board", {
+          duration: 5000,
+          onDismiss: () => {
+            window.location.href = "/dashboard";
+          },
+        });
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 5000);
+      } else {
+        store.removeMember(event.memberId);
+      }
       break;
+    }
   }
 }
 

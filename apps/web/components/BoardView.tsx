@@ -4,6 +4,7 @@ import { useBoardStore } from "@/app/stores/boardStore";
 import Column from "./Column";
 import AddColumn from "./AddColumn";
 import { useAuthStore } from "@/app/stores/authStore";
+import EditMembers from "./EditMembers";
 
 export default function BoardView() {
   const board = useBoardStore((state) => state.board);
@@ -21,9 +22,13 @@ export default function BoardView() {
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-base font-semibold">{board.title}</h2>
-              {isOwner && (
+              {isOwner ? (
                 <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                   Owner
+                </span>
+              ) : (
+                <span className="text-xs text-muted-foreground bg-muted-foreground/35 px-2 py-0.5 rounded-full">
+                  Member
                 </span>
               )}
             </div>
@@ -36,7 +41,7 @@ export default function BoardView() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center  gap-3">
           <div className="flex items-center">
             {board.members.map((m, index) => (
               <div
@@ -53,6 +58,7 @@ export default function BoardView() {
             {board.members.length}{" "}
             {board.members.length === 1 ? "member" : "members"}
           </span>
+          {isOwner && <EditMembers board={board} />}
         </div>
       </div>
 

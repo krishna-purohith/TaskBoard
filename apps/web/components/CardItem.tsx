@@ -119,18 +119,6 @@ export default function CardItem({ card }: Props) {
               {priority.label}
             </span>
           </div>
-
-          {card.dueDate && (
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Calendar className="h-3 w-3" />
-              <span>
-                {new Date(card.dueDate).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })}
-              </span>
-            </div>
-          )}
         </div>
       </div>
 

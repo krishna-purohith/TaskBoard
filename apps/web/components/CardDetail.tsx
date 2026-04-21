@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useAuthStore } from "@/app/stores/authStore";
 
 interface CardWithRelations extends Card {
@@ -216,6 +216,7 @@ export default function CardDetail({ cardId, open, onClose }: Props) {
                   onClick={() => setEditingTitle(true)}
                 >
                   {card.title}
+                  <Pencil />
                 </DialogTitle>
               )}
             </DialogHeader>

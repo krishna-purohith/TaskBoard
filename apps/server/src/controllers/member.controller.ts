@@ -6,7 +6,9 @@ import { broadcastToBoard } from "../ws/wsServer";
 
 export const memberController = {
   async addMember(req: Request, res: Response, next: NextFunction) {
+    console.log("k:", req.user);
     try {
+      console.log("inside try");
       const parsed = addMemberSchema.safeParse(req.body);
       if (!parsed.success) {
         res.status(400).json({
@@ -16,6 +18,7 @@ export const memberController = {
         });
         return;
       }
+      console.log("parsedDatak:", parsed.data);
       const boardId = req.params.boardId as string;
 
       const member = await memberService.addMember(
@@ -25,7 +28,7 @@ export const memberController = {
         parsed.data.role
       );
 
-      broadcastToBoard(boardId, { type: "MEMBER_ADDED", member });
+      broadcastToBoard(boardId, { type: "MEMBER_ADDED", member }, req.user!.id);
       res.status(201).json({ data: member, error: null, success: true });
     } catch (error) {
       next(error);
@@ -39,10 +42,14 @@ export const memberController = {
         req.params.boardId as string,
         req.params.userId as string
       );
-      broadcastToBoard(req.params.boardId as string, {
-        type: "MEMBER_REMOVED",
-        memberId: req.params.userId as string,
-      });
+      broadcastToBoard(
+        req.params.boardId as string,
+        {
+          type: "MEMBER_REMOVED",
+          memberId: req.params.userId as string,
+        },
+        req.user!.id
+      );
       res
         .status(200)
         .json({ data: "Member removed", error: null, success: true });

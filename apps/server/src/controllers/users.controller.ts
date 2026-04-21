@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { usersService } from "../services/users.service";
 
 export const userController = {
-  async getAllBoards(req: Request, res: Response, next: NextFunction) {
+  async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id;
       const users = await usersService.getAllUsers(userId);

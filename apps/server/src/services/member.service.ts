@@ -11,7 +11,8 @@ export const memberService = {
     const ownerMembership = await prisma.boardMember.findUnique({
       where: { userId_boardId: { userId: ownerId, boardId } },
     });
-
+    console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+    console.log("ownermemberhsipk: ", ownerMembership);
     if (!ownerMembership) throw new AppError("Access denied", 403);
     if (ownerMembership.role !== "OWNER")
       throw new AppError("Only owners can add members", 403);
