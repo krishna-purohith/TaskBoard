@@ -1,19 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { useAuthStore } from "@/app/stores/authStore";
 import { useBoardStore } from "@/app/stores/boardStore";
-import { Card, Comment, Tag } from "@repo/db";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -21,8 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Pencil, Trash2 } from "lucide-react";
-import { useAuthStore } from "@/app/stores/authStore";
+import { Textarea } from "@/components/ui/textarea";
+import { api } from "@/lib/api";
+import { Card, Comment, Tag } from "@repo/db";
+import { Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface CardWithRelations extends Card {
   comments: (Comment & {
@@ -43,11 +44,12 @@ export default function CardDetail({ cardId, open, onClose }: Props) {
   const deleteComment = useBoardStore((state) => state.deleteComment);
   const user = useAuthStore((state) => state.user);
 
+  const board = useBoardStore((state) => state.board);
+
   const [card, setCard] = useState<CardWithRelations | null>(null);
   const [loading, setLoading] = useState(true);
   const [comment, setComment] = useState("");
   const [allTags, setAllTags] = useState<Tag[]>([]);
-  const [editingTitle, setEditingTitle] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -74,9 +76,24 @@ export default function CardDetail({ cardId, open, onClose }: Props) {
     fetchCard();
   }, [cardId, open]);
 
+  const otherColumns =
+    board?.columns.filter((x) => x.id !== card?.columnId) ?? [];
+
+  async function handleMove(columnId: string) {
+    try {
+      const res = await api.put<Card>(`/cards/${card?.id}`, {
+        columnId: columnId,
+      });
+      updateCard(res);
+      setCard((prev) => (prev ? { ...prev, columnId } : prev));
+      onClose();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async function handleUpdateTitle() {
     if (!card || title === card.title) {
-      setEditingTitle(false);
       return;
     }
     try {
@@ -87,8 +104,6 @@ export default function CardDetail({ cardId, open, onClose }: Props) {
       setCard((prev) => (prev ? { ...prev, title } : prev));
     } catch (err) {
       console.error(err);
-    } finally {
-      setEditingTitle(false);
     }
   }
 
@@ -202,24 +217,41 @@ export default function CardDetail({ cardId, open, onClose }: Props) {
         ) : (
           <div className="space-y-6">
             <DialogHeader>
-              {editingTitle ? (
+              <div className="flex items-center gap-2 pr-8">
                 <Input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  onBlur={handleUpdateTitle}
-                  onKeyDown={(e) => e.key === "Enter" && handleUpdateTitle()}
-                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleUpdateTitle();
+                    if (e.key === "Escape") setTitle(card.title);
+                  }}
+                  className="text-base font-semibold"
                 />
-              ) : (
-                <DialogTitle
-                  className="cursor-pointer hover:underline"
-                  onClick={() => setEditingTitle(true)}
+                <Button
+                  size="sm"
+                  onClick={handleUpdateTitle}
+                  disabled={title === card.title || !title.trim()}
                 >
-                  {card.title}
-                  <Pencil />
-                </DialogTitle>
-              )}
+                  Update
+                </Button>
+              </div>
             </DialogHeader>
+
+            <div className="space-y-2">
+              <Label>Move to</Label>
+              <Select onValueChange={handleMove}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select column" />
+                </SelectTrigger>
+                <SelectContent>
+                  {otherColumns.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
             <div className="space-y-2">
               <p className="text-sm font-medium">Priority</p>

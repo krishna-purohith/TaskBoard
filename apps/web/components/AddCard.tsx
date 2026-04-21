@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { api } from "@/lib/api";
 import { useBoardStore } from "@/app/stores/boardStore";
-import { Card } from "@repo/db";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { api } from "@/lib/api";
+import { Card } from "@repo/db";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
 export default function AddCard({ columnId }: { columnId: string }) {
   const addCard = useBoardStore((state) => state.addCard);

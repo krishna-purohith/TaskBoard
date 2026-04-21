@@ -105,7 +105,13 @@ export const useBoardStore = create<BoardStore>((set) => ({
           ...state.board,
           columns: state.board.columns.map((col) => ({
             ...col,
-            cards: col.cards.map((c) => (c.id === card.id ? card : c)),
+            cards:
+              col.id === card.columnId
+                ? col.cards.some((c) => c.id === card.id)
+                  ? col.cards.map((c) => (c.id === card.id ? card : c))
+                  : [...col.cards, card]
+                : // remove from old column
+                  col.cards.filter((c) => c.id !== card.id),
           })),
         },
       };

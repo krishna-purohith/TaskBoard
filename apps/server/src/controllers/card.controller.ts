@@ -3,9 +3,6 @@ import { cardService } from "../services/card.service";
 import { createCardSchema, updateCardSchema } from "../types/requestSchemas";
 import { zodCustomErroFormat } from "../types/zodErrorFormat";
 import { broadcastToBoard } from "../ws/wsServer";
-import { boardService } from "../services/board.service";
-import { prisma } from "@repo/db";
-import { AppError } from "../middleware/errorMiddleware";
 
 export const cardsController = {
   async getCardById(req: Request, res: Response, next: NextFunction) {

@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { loginSchema, signupSchema } from "../types/requestSchemas";
 import { authService } from "../services/auth.service";
+import { loginSchema, signupSchema } from "../types/requestSchemas";
 import { zodCustomErroFormat } from "../types/zodErrorFormat";
-import { success } from "zod";
 
 const isProduction = process.env.NODE_ENV === "production";
 const cookieOptions = {

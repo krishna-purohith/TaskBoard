@@ -5,7 +5,7 @@ import { Card, Tag } from "@repo/db";
 import { useBoardStore } from "@/app/stores/boardStore";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { Trash2, Calendar } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import CardDetail from "./CardDetail";
 
 interface CardWithTags extends Card {
@@ -76,7 +76,7 @@ export default function CardItem({ card }: Props) {
         `}
       >
         <div className="flex items-start justify-between gap-2">
-          <p className="text-sm font-medium leading-snug flex-1">
+          <p className="text-sm font-medium leading-snug flex-1 line-clamp-2">
             {card.title}
           </p>
           <Button

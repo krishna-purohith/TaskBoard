@@ -1,6 +1,6 @@
-import type { Card, Column, Comment, BoardMember, Board } from "@repo/db";
+import type { BoardMember, Card, Column, Comment } from "@repo/db";
 
-export type { Card, Column, Comment, BoardMember };
+export type { BoardMember, Card, Column, Comment };
 
 export type WSClientEvent =
   | { type: "JOIN_BOARD"; boardId: string }
