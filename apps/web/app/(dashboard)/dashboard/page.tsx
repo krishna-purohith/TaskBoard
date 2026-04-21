@@ -41,6 +41,7 @@ export default function BoardsPage() {
     e.preventDefault();
     setCreating(true);
     try {
+      console.log("while creating. the board");
       const res = await api.post<Board>("/boards", {
         title,
         description,

@@ -58,11 +58,8 @@ export default function Column({ column }: Props) {
   }
 
   return (
-    <div
-      className="w-72 shrink-0 flex flex-col rounded-xl bg-muted/50 dark:bg-muted/20 border border-border/50 max-h-[calc(100vh-10rem)]
- overflow-y-auto"
-    >
-      <div className="sticky top-0 z-10 px-3 py-2.5 flex items-center justify-between bg-muted/50 dark:bg-muted/20 backdrop-blur-sm shrink-0">
+    <div className="w-72 shrink-0 flex flex-col rounded-xl bg-muted/50 dark:bg-muted/20 border border-border/50 max-h-[calc(100vh-11rem)] overflow-y-auto">
+      <div className="sticky top-0 z-10 px-3 py-2.5 flex items-center justify-between bg-muted/50 dark:bg-muted/20 backdrop-blur-lg shrink-0">
         {editing ? (
           <Input
             value={title}

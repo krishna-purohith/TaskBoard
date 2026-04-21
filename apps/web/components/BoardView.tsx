@@ -15,7 +15,7 @@ export default function BoardView() {
   const isOwner = currentMember?.role === "OWNER";
 
   return (
-    <div className="flex flex-col h-[calc(100vh-3.5rem)]">
+    <div className="flex flex-col h-[calc(100vh-var(--navbar-height))]">
       <div className="px-6 py-3 bg-background/80  flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <div>

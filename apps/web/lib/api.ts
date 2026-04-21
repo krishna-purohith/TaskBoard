@@ -26,12 +26,11 @@ async function apiFetch<T>(
       data: null,
     })
   );
-  console.log("apiResponse:", apiResponse);
 
   if (!apiResponse.success) {
     throw new Error(apiResponse.error);
   }
-  console.log("apiResponsekkk:", apiResponse);
+  console.log("apiResponsek:", apiResponse);
 
   return apiResponse.data as T;
 }

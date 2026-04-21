@@ -16,11 +16,11 @@ export default function AddCard({ columnId }: { columnId: string }) {
   async function handleAdd() {
     if (!title.trim()) return;
     try {
-      const res = await api.post<{ data: Card }>("/cards", {
+      const res = await api.post<Card>("/cards", {
         title,
         columnId,
       });
-      addCard(res.data);
+      addCard(res);
       setTitle("");
       setAdding(false);
     } catch (err) {

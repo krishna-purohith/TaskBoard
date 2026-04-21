@@ -16,11 +16,11 @@ export default function AddColumn({ boardId }: { boardId: string }) {
   async function handleAdd() {
     if (!title.trim()) return;
     try {
-      const res = await api.post<{ data: Column }>("/columns", {
+      const res = await api.post<Column>("/columns", {
         title,
         boardId,
       });
-      addColumn(res.data);
+      addColumn(res);
       setTitle("");
       setAdding(false);
     } catch (err) {
